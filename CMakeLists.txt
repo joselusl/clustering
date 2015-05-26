@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.6) 
-project (clustering)
+project (self_tunning_spectral_clustering)
 
 IF(CMAKE_SIZEOF_VOID_P EQUAL 4)
     SET(LIB_SUFFIX "")
@@ -7,6 +7,9 @@ ELSE(CMAKE_SIZEOF_VOID_P EQUAL 4)
     SET(LIB_SUFFIX 64)
 ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 4)
 
+
+#ROS USAGE
+SET(USE_ROS FALSE) # Set False if you want to build this package without Catkin
 
 #TESTS
 SET(COMPILE_TESTS TRUE)
@@ -31,9 +34,9 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
-	set(LIB_NAME clusteringd)
+	set(LIB_NAME self_tunning_spectral_clustering)
 else(CMAKE_BUILD_TYPE MATCHES "Debug")
-	set(LIB_NAME clustering)
+	set(LIB_NAME self_tunning_spectral_clustering)
 endif(CMAKE_BUILD_TYPE MATCHES "Debug")
 
 
@@ -47,8 +50,8 @@ file(GLOB LIB_PUBLIC_HEADERS "${CMAKE_SOURCE_DIR}/src/include/*.h")
 file(GLOB LIB_SOURCES "${CMAKE_SOURCE_DIR}/src/source/*.cpp")
 
 
-#add_library (${LIB_NAME}-s STATIC ${LIB_PUBLIC_HEADERS} ${LIB_SOURCES})
-add_library (${LIB_NAME} SHARED ${LIB_PUBLIC_HEADERS} ${LIB_SOURCES})
+add_library (${LIB_NAME} STATIC ${LIB_PUBLIC_HEADERS} ${LIB_SOURCES})
+#add_library (${LIB_NAME} SHARED ${LIB_PUBLIC_HEADERS} ${LIB_SOURCES})
 
 
 if(COMPILE_TESTS)
@@ -61,17 +64,41 @@ target_link_libraries(${LIB_NAME}_test ${LIB_NAME})
 endif()
 
 
-install(
-    TARGETS ${LIB_NAME}
-    LIBRARY DESTINATION lib${LIB_SUFFIX}
-)
+################################################################################
+# Create the self_tunning_spectral_clusteringConfig.cmake file for other cmake projects.
+IF(NOT USE_ROS)
 
-#install(
-#    TARGETS ${LIB_NAME}-s
-#    ARCHIVE DESTINATION lib${LIB_SUFFIX}
-#)
+	# find cmake
+    	SET(self_tunning_spectral_clustering_LIBRARY_DIR ${LIBRARY_OUTPUT_PATH} )
+	#Library with the full path
+	SET(self_tunning_spectral_clustering_LIBRARIES "${LIBRARY_OUTPUT_PATH}/lib${PROJECT_NAME}.a" )
 
-install(
-    FILES ${LIB_PUBLIC_HEADERS}
-    DESTINATION include/${LIB_NAME}
-)
+	SET(self_tunning_spectral_clustering_INCLUDE_DIR
+		${PROJECT_SOURCE_DIR}/src/include
+		)
+
+	CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/self_tunning_spectral_clusteringConfig.cmake.in
+		${CMAKE_CURRENT_BINARY_DIR}/cmake/self_tunning_spectral_clusteringConfig.cmake @ONLY IMMEDIATE )
+		export( PACKAGE self_tunning_spectral_clustering )
+
+	# TODO installation
+	#install(
+	#    TARGETS ${LIB_NAME}
+	#    LIBRARY DESTINATION lib${LIB_SUFFIX}
+	#)
+
+	#install(
+	#    TARGETS ${LIB_NAME}-s
+	#    ARCHIVE DESTINATION lib${LIB_SUFFIX}
+	#)
+
+	#install(
+	#    FILES ${LIB_PUBLIC_HEADERS}
+	#    DESTINATION include/${LIB_NAME}
+	#)
+ENDIF()
+
+
+
+
+
