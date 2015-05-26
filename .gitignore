@@ -13,3 +13,11 @@
 *.lai
 *.la
 *.a
+
+#temp
+*~
+
+#built files
+build
+lib
+bin
