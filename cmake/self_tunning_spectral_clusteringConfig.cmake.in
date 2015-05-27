@@ -1,18 +1,28 @@
-#######################################################
-# self_tunning_spectral_clustering source dir
-set( self_tunning_spectral_clustering_SOURCE_DIR "@CMAKE_CURRENT_SOURCE_DIR@")
 
-#######################################################
-# self_tunning_spectral_clustering build dir
-set( self_tunning_spectral_clustering_DIR "@CMAKE_CURRENT_BINARY_DIR@")
 
-#######################################################
+# library
 set( self_tunning_spectral_clustering_INCLUDE_DIR  "@self_tunning_spectral_clustering_INCLUDE_DIR@" )
-set( self_tunning_spectral_clustering_INCLUDE_DIRS "@self_tunning_spectral_clustering_INCLUDE_DIR@" )
-
-set( self_tunning_spectral_clustering_LIBS    "@self_tunning_spectral_clustering_LIBRARIES@" )
-set( self_tunning_spectral_clustering_LIBRARIES    "@self_tunning_spectral_clustering_LIBRARIES@" )
-set( self_tunning_spectral_clustering_LIBRARY      "@self_tunning_spectral_clustering_LIBRARIES@" )
-
+set( self_tunning_spectral_clustering_LIBRARY      "@self_tunning_spectral_clustering_LIBRARY@" )
 set( self_tunning_spectral_clustering_LIBRARY_DIR  "@self_tunning_spectral_clustering_LIBRARY_DIR@" )
-set( self_tunning_spectral_clustering_LIBRARY_DIRS "@self_tunning_spectral_clustering_LIBRARY_DIR@" )
+
+
+
+# Dependencies
+FIND_PACKAGE(Eigen2 REQUIRED)
+if(NOT Eigen2_FOUND)
+    message(FATAL_ERROR "Failed to find Eigen2")
+else()
+    message(STATUS "Eigen2_INCLUDE_DIRS=${Eigen2_INCLUDE_DIRS}")
+endif(NOT Eigen2_FOUND)
+
+
+
+#library with dependencies
+set( self_tunning_spectral_clustering_INCLUDE_DIRS  ${self_tunning_spectral_clustering_INCLUDE_DIR}
+        ${Eigen2_INCLUDE_DIRS})
+set( self_tunning_spectral_clustering_LIBRARIES    ${self_tunning_spectral_clustering_LIBRARY})
+set( self_tunning_spectral_clustering_LIBS    ${self_tunning_spectral_clustering_LIBRARIES})
+set( self_tunning_spectral_clustering_LIBRARY_DIRS ${self_tunning_spectral_clustering_LIBRARY_DIR})
+
+set( self_tunning_spectral_clustering_FOUND "yes")
+

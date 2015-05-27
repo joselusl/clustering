@@ -1,5 +1,13 @@
 cmake_minimum_required (VERSION 2.6) 
-project (self_tunning_spectral_clustering)
+
+
+SET(PROJECT_NAME self_tunning_spectral_clustering)
+
+project(${PROJECT_NAME})
+
+
+message("Configuring ${PROJECT_NAME}")
+
 
 IF(CMAKE_SIZEOF_VOID_P EQUAL 4)
     SET(LIB_SUFFIX "")
@@ -15,10 +23,10 @@ SET(USE_ROS FALSE) # Set False if you want to build this package without Catkin
 SET(COMPILE_TESTS TRUE)
 
 
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
+if(NOT USE_ROS)
+	set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/lib)
+	set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/bin)
+endif(NOT USE_ROS)
 
 
 IF(CMAKE_COMPILER_IS_GNUCC)
@@ -27,39 +35,41 @@ ELSE()
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ENDIF()
 
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
-      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
-      FORCE)
-endif(NOT CMAKE_BUILD_TYPE)
 
-if(CMAKE_BUILD_TYPE MATCHES "Debug")
-	set(LIB_NAME self_tunning_spectral_clustering)
-else(CMAKE_BUILD_TYPE MATCHES "Debug")
-	set(LIB_NAME self_tunning_spectral_clustering)
-endif(CMAKE_BUILD_TYPE MATCHES "Debug")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
+
+message(STATUS "CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}")
 
 
 
 find_package(Eigen2 REQUIRED)
+if(NOT Eigen2_FOUND)
+    message(FATAL_ERROR "Failed to find Eigen2")
+else()
+    message(STATUS "Eigen2_INCLUDE_DIR=${Eigen2_INCLUDE_DIR}")
+endif(NOT Eigen2_FOUND)
+
+
+
 include_directories(${Eigen2_INCLUDE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
 
 
+file(GLOB LIB_PUBLIC_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/include/*.h")
+file(GLOB LIB_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/source/*.cpp")
 
-file(GLOB LIB_PUBLIC_HEADERS "${PROJECT_SOURCE_DIR}/src/include/*.h")
-file(GLOB LIB_SOURCES "${PROJECT_SOURCE_DIR}/src/source/*.cpp")
 
+add_library(${PROJECT_NAME} STATIC ${LIB_PUBLIC_HEADERS} ${LIB_SOURCES})
+#add_library (${PROJECT_NAME} SHARED ${LIB_PUBLIC_HEADERS} ${LIB_SOURCES})
 
-add_library (${LIB_NAME} STATIC ${LIB_PUBLIC_HEADERS} ${LIB_SOURCES})
-#add_library (${LIB_NAME} SHARED ${LIB_PUBLIC_HEADERS} ${LIB_SOURCES})
 
 
 if(COMPILE_TESTS)
 
-include_directories(src/include)
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/include)
 
-add_executable(${LIB_NAME}_test test/clustering_test.cpp)
-target_link_libraries(${LIB_NAME}_test ${LIB_NAME})
+    add_executable(${PROJECT_NAME}_test ${CMAKE_CURRENT_SOURCE_DIR}/test/clustering_test.cpp)
+    target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME})
 
 endif()
 
@@ -71,7 +81,7 @@ IF(NOT USE_ROS)
 	# find cmake
     	SET(self_tunning_spectral_clustering_LIBRARY_DIR ${LIBRARY_OUTPUT_PATH} )
 	#Library with the full path
-	SET(self_tunning_spectral_clustering_LIBRARIES "${LIBRARY_OUTPUT_PATH}/lib${PROJECT_NAME}.a" )
+	SET(self_tunning_spectral_clustering_LIBRARY "${LIBRARY_OUTPUT_PATH}/lib${PROJECT_NAME}.a" )
 
 	SET(self_tunning_spectral_clustering_INCLUDE_DIR
 		${PROJECT_SOURCE_DIR}/src/include
