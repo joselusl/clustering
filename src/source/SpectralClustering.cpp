@@ -10,6 +10,7 @@
 #include "Kmeans.h"
 
 #include <Eigen/QR>
+#include <Eigen/Eigenvalues>
 
 /**
 * Performs eigenvector decomposition of an affinity matrix
@@ -29,7 +30,8 @@ SpectralClustering::SpectralClustering(Eigen::MatrixXd& data, int numDims):
 	}
 	Eigen::MatrixXd Lapla = Deg * data * Deg;
 
-	Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> s(Lapla, true);
+    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> s;
+    s.compute(Lapla);
 	Eigen::VectorXd val = s.eigenvalues();
 	Eigen::MatrixXd vec = s.eigenvectors();
 

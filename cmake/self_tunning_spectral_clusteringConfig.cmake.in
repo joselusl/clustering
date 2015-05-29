@@ -8,18 +8,18 @@ set( self_tunning_spectral_clustering_LIBRARY_DIR  "@self_tunning_spectral_clust
 
 
 # Dependencies
-FIND_PACKAGE(Eigen2 REQUIRED)
-if(NOT Eigen2_FOUND)
-    message(FATAL_ERROR "Failed to find Eigen2")
+FIND_PACKAGE(Eigen REQUIRED)
+if(NOT Eigen_FOUND)
+    message(FATAL_ERROR "Failed to find Eigen")
 else()
-    message(STATUS "Eigen2_INCLUDE_DIRS=${Eigen2_INCLUDE_DIRS}")
-endif(NOT Eigen2_FOUND)
+    message(STATUS "Eigen_INCLUDE_DIRS=${Eigen_INCLUDE_DIRS}")
+endif()
 
 
 
 #library with dependencies
 set( self_tunning_spectral_clustering_INCLUDE_DIRS  ${self_tunning_spectral_clustering_INCLUDE_DIR}
-        ${Eigen2_INCLUDE_DIRS})
+        ${Eigen_INCLUDE_DIRS})
 set( self_tunning_spectral_clustering_LIBRARIES    ${self_tunning_spectral_clustering_LIBRARY})
 set( self_tunning_spectral_clustering_LIBS    ${self_tunning_spectral_clustering_LIBRARIES})
 set( self_tunning_spectral_clustering_LIBRARY_DIRS ${self_tunning_spectral_clustering_LIBRARY_DIR})

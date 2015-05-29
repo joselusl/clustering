@@ -8,7 +8,6 @@
 #include "ClusterRotate.h"
 
 #include <map>
-#include <Eigen/Array>
 
 ClusterRotate::ClusterRotate(int method):
 	mMethod(method),

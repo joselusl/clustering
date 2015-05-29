@@ -42,16 +42,16 @@ message(STATUS "CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}")
 
 
 
-find_package(Eigen2 REQUIRED)
-if(NOT Eigen2_FOUND)
-    message(FATAL_ERROR "Failed to find Eigen2")
+find_package(Eigen REQUIRED)
+if(NOT Eigen_FOUND)
+    message(FATAL_ERROR "Failed to find Eigen")
 else()
-    message(STATUS "Eigen2_INCLUDE_DIR=${Eigen2_INCLUDE_DIR}")
-endif(NOT Eigen2_FOUND)
+    message(STATUS "Eigen_INCLUDE_DIR=${Eigen_INCLUDE_DIRS}")
+endif()
 
 
 
-include_directories(${Eigen2_INCLUDE_DIR})
+include_directories(${Eigen_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/include/)
 
 

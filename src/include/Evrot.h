@@ -18,7 +18,6 @@
 #include <vector>
 #include <math.h>
 #include <Eigen/Core>
-#include <Eigen/Array>
 
 #define DEBUG 0    // set to 1 to see print outs
 #define  EPS 2.2204e-16

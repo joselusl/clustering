@@ -8,6 +8,9 @@
 #include "Kmeans.h"
 
 #include <map>
+#include <iostream>
+
+#include <random>
 
 Kmeans::Kmeans() {
 }
@@ -33,12 +36,19 @@ std::vector<std::vector<int> > Kmeans::cluster(Eigen::MatrixXd& data, int ncentr
 	Eigen::MatrixXd old_centres;
 
 	std::vector<int> rands;
+
+    // Random device
+    std::random_device randomDevice;
+
+    std::mt19937 random_generator(randomDevice());
+    std::uniform_int_distribution<> random_distribution(0,ndata-1);
+
 	for (int i=0; i < ncentres; i++) {
 		//randomly initialise centers
 		bool flag;
 		do {
 			flag = false;
-			int randIndex = Eigen::ei_random(0,ndata-1);
+            int randIndex = random_distribution(random_generator);//Eigen::ei_random(0,ndata-1);
 			//make sure same row not chosen twice
 			for (unsigned int j=0; j < rands.size(); ++j) {
 				if (randIndex == rands[j]) {
@@ -52,7 +62,7 @@ std::vector<std::vector<int> > Kmeans::cluster(Eigen::MatrixXd& data, int ncentr
 			}
 		} while (flag);
 	}
-	Eigen::MatrixXd id = Eigen::MatrixXd::Identity(ncentres, ncentres);
+    Eigen::MatrixXd id = Eigen::MatrixXd::Identity(ncentres, ncentres);
 	//maps vectors to centres.
 	Eigen::MatrixXd post(ndata, ncentres);
 
@@ -98,7 +108,7 @@ std::vector<std::vector<int> > Kmeans::cluster(Eigen::MatrixXd& data, int ncentr
 		// Error value is total squared distance from cluster centres
 		double e = minvals.sum();
 		double ediff = fabs(old_e - e);
-		double cdiff = (centres-old_centres).cwise().abs().maxCoeff();
+        double cdiff = (centres-old_centres).array().abs().maxCoeff();
 		std::cout << "Cycle " << n << " Error " << e << " Movement " << cdiff << ", " << ediff << std::endl;
 
 		if (n > 1) {

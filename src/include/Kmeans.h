@@ -9,7 +9,6 @@
 #define KMEANS_H_
 
 #include <Eigen/Core>
-#include <Eigen/Array>
 #include <vector>
 
 class Kmeans {
